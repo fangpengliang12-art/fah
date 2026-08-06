@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Singapore Hawker Culture Puzzle Quiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Hawker Culture Jigsaw Quiz</h1>
+  <p class="subtitle">Answer the questions below. Each correct answer locks a puzzle piece into place!</p>
+
+  <div class="quiz-container">
+    <div class="quiz-box">
+      <div id="question-number">Question 1 of 8</div>
+      <div id="question-text">Loading question...</div>
+      
+      <form id="quiz-form" onsubmit="checkAnswer(event)">
+        <input 
+          type="text" 
+          id="answer-input" 
+          placeholder="Type your answer here..." 
+          autocomplete="off" 
+          required
+        >
+        <button type="submit" id="submit-btn">Submit Answer</button>
+      </form>
+      
+      <div id="feedback"></div>
+      <div id="score-tracker">Pieces Unlocked: <span id="score">0</span> / 8</div>
+    </div>
+
+    <div class="puzzle-section">
+      <div id="puzzle-board"></div>
+      
+      <div class="controls">
+        <label for="img-input" class="upload-btn">📷 Custom Image</label>
+        <input type="file" id="img-input" accept="image/*" onchange="loadCustomImage(event)">
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

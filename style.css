@@ -1,0 +1,166 @@
+:root {
+  --bg-color: #fdfbf7;
+  --card-bg: #ffffff;
+  --primary: #d9381e;
+  --accent: #2e7d32;
+  --text: #2c2c2c;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text);
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  color: var(--primary);
+  margin-bottom: 5px;
+  text-align: center;
+}
+
+p.subtitle {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #666;
+}
+
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 850px;
+}
+
+/* Quiz Input Card */
+.quiz-box {
+  background: var(--card-bg);
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 500px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+#question-number {
+  font-size: 0.85em;
+  font-weight: bold;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+#question-text {
+  font-size: 1.15em;
+  font-weight: 600;
+  margin-bottom: 20px;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#quiz-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#answer-input {
+  padding: 12px 15px;
+  font-size: 1em;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#answer-input:focus {
+  border-color: var(--primary);
+}
+
+#submit-btn, .upload-btn {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+#submit-btn:hover {
+  background-color: #b32a13;
+}
+
+#feedback {
+  margin-top: 15px;
+  font-weight: bold;
+  min-height: 24px;
+}
+
+.correct { color: var(--accent); }
+.incorrect { color: var(--primary); }
+
+#score-tracker {
+  margin-top: 15px;
+  font-size: 0.9em;
+  color: #777;
+}
+
+/* 2x4 Jigsaw Board */
+.puzzle-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+#puzzle-board {
+  width: 800px;
+  height: 400px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  position: relative;
+  overflow: hidden;
+  border: 3px dashed #ccc;
+  border-radius: 10px;
+  background-color: #eaeaea;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+}
+
+.tile {
+  width: 100%;
+  height: 100%;
+  background-size: 800px 400px;
+  transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.8s ease;
+  box-sizing: border-box;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.controls {
+  margin-top: 10px;
+}
+
+input[type="file"] { display: none; }
+
+.upload-btn {
+  background-color: var(--accent);
+  display: inline-block;
+}
+
+.upload-btn:hover {
+  background-color: #1e5622;
+}
