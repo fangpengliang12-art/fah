@@ -1,26 +1,29 @@
 const ROWS = 2;
 const COLS = 4;
 const board = document.getElementById('puzzle-board');
-
-// Solid default background color in case the internet image is slow
 let currentImage = 'https://picsum.photos/800/400';
 
+// Added specific hints for each question
 const quizData = [
   {
     question: "In which decade were hawker centres relocated and refurbished?",
-    answers: ["1980s", "1980", "80s", "the 1980s", "1980's"]
+    answers: ["1980s", "1980", "80s", "the 1980s", "1980's"],
+    hint: "💡 Hint: It's the decade known for synth music and big hair (198_s)."
   },
   {
     question: "What was the Orchard Road Carpark Hawker centre commonly known as?",
-    answers: ["glutton's square", "gluttons square", "glutton square", "glutton’s square"]
+    answers: ["glutton's square", "gluttons square", "glutton square", "glutton’s square"],
+    hint: "💡 Hint: Named after someone who loves to eat a lot (Glutton's _____)."
   },
   {
     question: "How did hawkers get to choose their permanent food stalls?",
-    answers: ["balloting", "ballot", "by balloting"]
+    answers: ["balloting", "ballot", "by balloting"],
+    hint: "💡 Hint: A random drawing or voting system starting with 'B'."
   },
   {
     question: "What is the percentage of Singaporeans who visit hawker centre at least once a week?",
-    answers: ["83%", "83 percent", "83"]
+    answers: ["83%", "83 percent", "83"],
+    hint: "💡 Hint: It's in the low 80s (8_%)."
   },
   {
     question: "How are our modern new hawker centres different?",
@@ -30,11 +33,13 @@ const quizData = [
       "air-con or clean plates", 
       "air con", 
       "clean plates"
-    ]
+    ],
+    hint: "💡 Hint: Think cool air or returning your food tray (Air con or _____)."
   },
   {
     question: "In what year was our hawker culture recognised for being part of UNESCO heritage?",
-    answers: ["2020", "in 2020"]
+    answers: ["2020", "in 2020"],
+    hint: "💡 Hint: The year the global pandemic began (202_)."
   },
   {
     question: "How are we using technology in hawker centres now?",
@@ -44,16 +49,19 @@ const quizData = [
       "robots, self ordering kiosks and digital menus",
       "robots, self ordering kiosk & digital menu",
       "robots self ordering kiosk and digital menu"
-    ]
+    ],
+    hint: "💡 Hint: Tray-returning machines, touch-screens, and electronic food boards."
   },
   {
     question: "Who said this? 'Hawker food makes Singapore unique. It is part of our national identity.'",
-    answers: ["tommy koh", "prof tommy koh", "professor tommy koh"]
+    answers: ["tommy koh", "prof tommy koh", "professor tommy koh"],
+    hint: "💡 Hint: A famous Singaporean diplomat named Prof. T____ K__."
   }
 ];
 
 let currentQuestionIndex = 0;
 let unlockedCount = 0;
+let wrongAttempts = 0; // Tracks incorrect guesses per question
 
 function initBoard() {
   if (!board) return;
@@ -87,6 +95,7 @@ function scatterSingleTile(tile) {
 }
 
 function loadQuestion() {
+  wrongAttempts = 0; // Reset attempts for the new question
   const feedback = document.getElementById('feedback');
   if (feedback) feedback.textContent = '';
   
@@ -117,27 +126,55 @@ function checkAnswer(event) {
   const feedbackEl = document.getElementById('feedback');
   
   const userAnswer = inputEl.value.trim().toLowerCase();
-  const validAnswers = quizData[currentQuestionIndex].answers;
+  const currentQ = quizData[currentQuestionIndex];
 
-  if (validAnswers.includes(userAnswer)) {
+  if (currentQ.answers.includes(userAnswer)) {
     feedbackEl.textContent = "✨ Correct! Piece unlocked!";
     feedbackEl.className = "correct";
     
-    flyInPiece(currentQuestionIndex);
-    
-    unlockedCount++;
-    document.getElementById('score').textContent = unlockedCount;
-    
-    currentQuestionIndex++;
-    inputEl.disabled = true;
-    document.getElementById('submit-btn').disabled = true;
-
-    setTimeout(loadQuestion, 1000);
+    unlockPieceAndAdvance();
   } else {
-    feedbackEl.textContent = "❌ Incorrect, try again!";
-    feedbackEl.className = "incorrect";
-    inputEl.select();
+    wrongAttempts++;
+    
+    if (wrongAttempts >= 5) {
+      // 5th Wrong Try: Auto-unlock and show answer
+      const mainAnswer = currentQ.answers[0];
+      feedbackEl.textContent = `⚠️ Out of tries! The answer was "${mainAnswer}". Unlocking piece anyway...`;
+      feedbackEl.className = "incorrect";
+      
+      inputEl.disabled = true;
+      document.getElementById('submit-btn').disabled = true;
+      
+      setTimeout(unlockPieceAndAdvance, 2500);
+    } else if (wrongAttempts >= 2) {
+      // 2nd to 4th Wrong Try: Display hint
+      feedbackEl.textContent = `❌ Incorrect (${wrongAttempts}/5 tries). ${currentQ.hint}`;
+      feedbackEl.className = "incorrect";
+      inputEl.select();
+    } else {
+      // 1st Wrong Try
+      feedbackEl.textContent = `❌ Incorrect, try again! (${wrongAttempts}/5 tries)`;
+      feedbackEl.className = "incorrect";
+      inputEl.select();
+    }
   }
+}
+
+function unlockPieceAndAdvance() {
+  flyInPiece(currentQuestionIndex);
+  
+  unlockedCount++;
+  document.getElementById('score').textContent = unlockedCount;
+  
+  currentQuestionIndex++;
+  
+  const inputEl = document.getElementById('answer-input');
+  if (inputEl) inputEl.disabled = true;
+  
+  const btnEl = document.getElementById('submit-btn');
+  if (btnEl) btnEl.disabled = true;
+
+  setTimeout(loadQuestion, 1200);
 }
 
 function flyInPiece(index) {
@@ -164,7 +201,6 @@ function loadCustomImage(event) {
   }
 }
 
-// Loads as soon as the HTML elements exist (no waiting for images)
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initBoard);
 } else {
