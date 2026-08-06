@@ -1,9 +1,10 @@
 const ROWS = 2;
 const COLS = 4;
 const board = document.getElementById('puzzle-board');
+
+// Default fallback image if no custom image is saved yet
 let currentImage = 'https://picsum.photos/800/400';
 
-// Added specific hints for each question
 const quizData = [
   {
     question: "In which decade were hawker centres relocated and refurbished?",
@@ -39,7 +40,7 @@ const quizData = [
   {
     question: "In what year was our hawker culture recognised for being part of UNESCO heritage?",
     answers: ["2020", "in 2020"],
-    hint: "💡 Hint: The year the global pandemic began (202_)."
+    hint: "💡 Hint: The year 2020."
   },
   {
     question: "How are we using technology in hawker centres now?",
@@ -61,10 +62,17 @@ const quizData = [
 
 let currentQuestionIndex = 0;
 let unlockedCount = 0;
-let wrongAttempts = 0; // Tracks incorrect guesses per question
+let wrongAttempts = 0;
 
 function initBoard() {
   if (!board) return;
+
+  // Restore saved image across instances/refreshes if stored in browser
+  const savedImage = localStorage.getItem('savedPuzzleImage');
+  if (savedImage) {
+    currentImage = savedImage;
+  }
+
   board.innerHTML = '';
 
   for (let r = 0; r < ROWS; r++) {
@@ -95,7 +103,7 @@ function scatterSingleTile(tile) {
 }
 
 function loadQuestion() {
-  wrongAttempts = 0; // Reset attempts for the new question
+  wrongAttempts = 0; 
   const feedback = document.getElementById('feedback');
   if (feedback) feedback.textContent = '';
   
@@ -137,7 +145,6 @@ function checkAnswer(event) {
     wrongAttempts++;
     
     if (wrongAttempts >= 5) {
-      // 5th Wrong Try: Auto-unlock and show answer
       const mainAnswer = currentQ.answers[0];
       feedbackEl.textContent = `⚠️ Out of tries! The answer was "${mainAnswer}". Unlocking piece anyway...`;
       feedbackEl.className = "incorrect";
@@ -147,12 +154,10 @@ function checkAnswer(event) {
       
       setTimeout(unlockPieceAndAdvance, 2500);
     } else if (wrongAttempts >= 2) {
-      // 2nd to 4th Wrong Try: Display hint
       feedbackEl.textContent = `❌ Incorrect (${wrongAttempts}/5 tries). ${currentQ.hint}`;
       feedbackEl.className = "incorrect";
       inputEl.select();
     } else {
-      // 1st Wrong Try
       feedbackEl.textContent = `❌ Incorrect, try again! (${wrongAttempts}/5 tries)`;
       feedbackEl.className = "incorrect";
       inputEl.select();
@@ -192,6 +197,13 @@ function loadCustomImage(event) {
     reader.onload = function(e) {
       currentImage = e.target.result;
       
+      // Save image to browser memory for persistence
+      try {
+        localStorage.setItem('savedPuzzleImage', currentImage);
+      } catch (err) {
+        console.warn('Image size too large for localStorage persistence.');
+      }
+      
       const tiles = document.querySelectorAll('.tile');
       tiles.forEach((tile) => {
         tile.style.backgroundImage = `url('${currentImage}')`;
@@ -201,6 +213,7 @@ function loadCustomImage(event) {
   }
 }
 
+// Fire init logic safely as soon as the DOM loads
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initBoard);
 } else {
