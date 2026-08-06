@@ -3,7 +3,7 @@ const COLS = 4;
 const board = document.getElementById('puzzle-board');
 
 // Change 'puzzle-image.jpg' to your exact image file name in your repo!
-let currentImage = 'imagecrab.jpg';
+let currentImage = 'imagecrab.jpeg';
 
 const quizData = [
   {
