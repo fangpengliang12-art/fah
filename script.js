@@ -2,8 +2,8 @@ const ROWS = 2;
 const COLS = 4;
 const board = document.getElementById('puzzle-board');
 
-// Default fallback image if no custom image is saved yet
-let currentImage = 'https://picsum.photos/800/400';
+// Change 'puzzle-image.jpg' to your exact image file name in your repo!
+let currentImage = 'puzzle-image.jpg';
 
 const quizData = [
   {
@@ -67,7 +67,6 @@ let wrongAttempts = 0;
 function initBoard() {
   if (!board) return;
 
-  // Restore saved image across instances/refreshes if stored in browser
   const savedImage = localStorage.getItem('savedPuzzleImage');
   if (savedImage) {
     currentImage = savedImage;
@@ -197,7 +196,6 @@ function loadCustomImage(event) {
     reader.onload = function(e) {
       currentImage = e.target.result;
       
-      // Save image to browser memory for persistence
       try {
         localStorage.setItem('savedPuzzleImage', currentImage);
       } catch (err) {
@@ -213,7 +211,6 @@ function loadCustomImage(event) {
   }
 }
 
-// Fire init logic safely as soon as the DOM loads
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initBoard);
 } else {
